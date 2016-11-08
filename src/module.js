@@ -7,7 +7,7 @@ const spawnargs = require('spawn-args');
 
 const executeAndReturn = (command) => {
     const tokens = command.split(/\s/);
-    const shell = spawn(tokens.shift(), spawnargs(tokens.join(' '), { removequotes: true }));
+    const shell = spawn(tokens.shift(), spawnargs(tokens.join(' '), { removequotes: 'always' }));
 
     return new Promise((resolve, reject) => {
         shell.on('exit', (code) => {
@@ -23,7 +23,7 @@ const executeAndReturn = (command) => {
 const executeAndCapture = (command, log) => {
     const chunks = [];
     const tokens = command.split(/\s/);
-    const shell = spawn(tokens.shift(), spawnargs(tokens.join(' '), { removequotes: true }));
+    const shell = spawn(tokens.shift(), spawnargs(tokens.join(' '), { removequotes: 'always' }));
 
     shell.stderr.on('readable', () => {
         const chunk = shell.stderr.read();
