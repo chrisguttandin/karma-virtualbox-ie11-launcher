@@ -148,8 +148,7 @@ function VirtualBoxIE11Browser (args, baseBrowserDecorator, logger) {
                         .on('upgrade', (req, socket, head) => proxy.ws(req, socket, head))
                         .listen(8015);
 
-
-                    return executeAndReturn(`VBoxManage guestcontrol {${ uuid }} --password Passw0rd! --username IEUser run --exe C:\\Program Files\\Internet Explorer\\iexplore.exe --wait-stderr --wait-stdout -- -extoff -private ${ url.replace(/localhost:9876/, '10.0.2.2:8015') }`);
+                    return executeAndReturn(`VBoxManage guestcontrol {${ uuid }} --password Passw0rd! --username IEUser run --exe "C:\\Program Files\\Internet Explorer\\iexplore.exe" --wait-stderr --wait-stdout -- -extoff -private ${ url.replace(/localhost:9876/, '10.0.2.2:8015') }`);
                 })
                 .catch((err) => log.error(err));
         });
