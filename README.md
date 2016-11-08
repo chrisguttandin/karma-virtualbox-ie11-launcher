@@ -26,12 +26,12 @@ To run tests on Microsoft Internet Explorer 11 Karma can be configured like that
 ```js
 // ...
 browsers: [
-    'VirtualBoxIE11'
+    'VirtualBoxIE11onWin8'
 ],
 // ...
 customLaunchers: {
-    VirtualBoxIE11: {
-        base: 'VirtualBoxIE',
+    VirtualBoxIE11onWin8: {
+        base: 'VirtualBoxIE11',
         keepAlive: true,
         snapshot: 'pristine',
         uuid: '66975e0d-14f7-4d79-7b8b-b3f6496f0a14'
