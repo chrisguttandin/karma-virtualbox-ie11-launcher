@@ -1,7 +1,5 @@
 'use strict';
 
-const createProxyServer = require('http-proxy').createProxyServer;
-const http = require('http');
 const spawn = require('child_process').spawn;
 const spawnargs = require('spawn-args');
 
@@ -53,8 +51,6 @@ const executeAndCapture = (command, log) => {
 };
 
 function VirtualBoxIE11Browser (args, baseBrowserDecorator, logger) {
-    let proxyServer;
-
     baseBrowserDecorator(this);
 
     const kill = !args.keepAlive;
@@ -73,10 +69,6 @@ function VirtualBoxIE11Browser (args, baseBrowserDecorator, logger) {
 
     this
         .on('kill', (done) => {
-            if (proxyServer) {
-                proxyServer.close();
-            }
-
             if (kill) {
                 return executeAndCapture(`VBoxManage controlvm {${ uuid }} acpipowerbutton`, log)
                     .then(() => done())
@@ -116,39 +108,7 @@ function VirtualBoxIE11Browser (args, baseBrowserDecorator, logger) {
                     }
                 })
                 .then(() => {
-                    const proxy = createProxyServer({ target: { host: 'localhost', port: 9876 } });
-
-                    proxy.on('proxyRes', (proxyRes, request, response) => {
-                        if (proxyRes.headers &&
-                                proxyRes.headers['content-type'] &&
-                                proxyRes.headers['content-type'].match('application/javascript') &&
-                                !request.url.includes('/karma.js') &&
-                                !request.url.includes('/node_modules/') &&
-                                !request.url.includes('/socket.io/')) {
-                            const end = response.end;
-                            const chunks = [];
-                            const write = response.write;
-
-                            response.end = () => {
-                                write.call(response, chunks.join('').replace(/localhost/g, '10.0.2.2'));
-
-                                end.call(response);
-                            };
-
-                            response.write = (chunk) => {
-                                if (chunk !== null) {
-                                    chunks.push(chunk.toString());
-                                }
-                            };
-                        }
-                    });
-
-                    proxyServer = http
-                        .createServer((req, res) => proxy.web(req, res))
-                        .on('upgrade', (req, socket, head) => proxy.ws(req, socket, head))
-                        .listen(8015);
-
-                    return executeAndReturn(`VBoxManage guestcontrol {${ uuid }} --password Passw0rd! --username IEUser run --exe "C:\\Program Files\\Internet Explorer\\iexplore.exe" --wait-stderr --wait-stdout -- -extoff -private ${ url.replace(/localhost:9876/, '10.0.2.2:8015') }`);
+                    return executeAndReturn(`VBoxManage guestcontrol {${ uuid }} --password Passw0rd! --username IEUser run --exe "C:\\Program Files\\Internet Explorer\\iexplore.exe" --wait-stderr --wait-stdout -- -extoff -private ${ url.replace(/localhost:9876/, '10.0.2.2:9876') }`);
                 })
                 .catch((err) => log.error(err));
         });

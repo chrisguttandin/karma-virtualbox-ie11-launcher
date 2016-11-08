@@ -4,7 +4,6 @@
     "url": "https://github.com/chrisguttandin/karma-virtualbox-ie11-launcher/issues"
   },
   "dependencies": {
-    "http-proxy": "^1.14.0",
     "spawn-args": "^0.2.0"
   },
   "description": "A Karma launcher for Internet Explorer 11 on VirtualBox.",
