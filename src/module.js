@@ -93,7 +93,7 @@ function VirtualBoxIE11Browser (args, baseBrowserDecorator, logger) {
                     }
                 })
                 .then(() => {
-                    return execute(`VBoxManage guestcontrol {${ uuid }} --password Passw0rd! --username IEUser run --exe "C:\\Program Files\\Internet Explorer\\iexplore.exe" --wait-stderr --wait-stdout -- -extoff -private ${ url.replace(/localhost:9876/, '10.0.2.2:9876') }`, log);
+                    return execute(`VBoxManage guestcontrol {${ uuid }} --password Passw0rd! --username IEUser run --exe "C:\\Program Files\\Internet Explorer\\iexplore.exe" --wait-stderr --wait-stdout -- -extoff -private ${ url.replace(/localhost:/, '10.0.2.2:') }`, log);
                 })
                 .catch((err) => {
                     if (err === 1) {
