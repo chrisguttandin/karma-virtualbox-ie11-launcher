@@ -88,9 +88,9 @@ function VirtualBoxIE11Browser (args, baseBrowserDecorator, logger) {
                                 // Wait one more minute to be sure that Windows is up and running.
                                 setTimeout(resolve, 60e3);
                             }));
-                    } else {
-                        log.info('The virtual machine is already running.');
                     }
+
+                    log.info('The virtual machine is already running.');
                 })
                 .then(() => {
                     return execute(`VBoxManage guestcontrol {${ uuid }} --password Passw0rd! --username IEUser run --exe "C:\\Program Files\\Internet Explorer\\iexplore.exe" --wait-stderr --wait-stdout -- -extoff -private ${ url.replace(/localhost:/, '10.0.2.2:') }`, log);
