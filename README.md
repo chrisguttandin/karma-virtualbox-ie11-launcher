@@ -43,6 +43,18 @@ customLaunchers: {
 In case you want to know the uuids of your vms, you can run `VBoxManage list vms` to get the list of
 available vms.
 
+Or, you can specify the name of the VM returned by `VBoxManage list vms`, e.g.:
+```js
+customLaunchers: {
+    VirtualBoxIE11onWin8: {
+        base: 'VirtualBoxIE11',
+        keepAlive: true,
+        snapshot: 'pristine',
+        vmName: 'IE11 - Win81'
+    }
+}
+```
+
 If you explicitly specify the plugins in your config file as well, make sure to add
 `karma-virtualbox-ie11-launcher` to the list of plugins.
 
