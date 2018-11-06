@@ -1,28 +1,30 @@
-const grunt = require('grunt');
+module.exports = (grunt) => {
+    const fix = (grunt.option('fix') === true);
 
-module.exports = {
-    config: {
-        options: {
-            configFile: 'config/eslint/config.json',
-            fix: grunt.option('fix'),
-            reportUnusedDisableDirectives: true
+    return {
+        config: {
+            options: {
+                configFile: 'config/eslint/config.json',
+                fix,
+                reportUnusedDisableDirectives: true
+            },
+            src: [ '*.js', 'config/**/*.js' ]
         },
-        src: [ '*.js', 'config/**/*.js' ]
-    },
-    src: {
-        options: {
-            configFile: 'config/eslint/src.json',
-            fix: grunt.option('fix'),
-            reportUnusedDisableDirectives: true
+        src: {
+            options: {
+                configFile: 'config/eslint/src.json',
+                fix,
+                reportUnusedDisableDirectives: true
+            },
+            src: [ 'src/**/*.js' ]
         },
-        src: [ 'src/**/*.js' ]
-    },
-    test: {
-        options: {
-            configFile: 'config/eslint/test.json',
-            fix: grunt.option('fix'),
-            reportUnusedDisableDirectives: true
-        },
-        src: [ 'test/**/*.js' ]
-    }
+        test: {
+            options: {
+                configFile: 'config/eslint/test.json',
+                fix,
+                reportUnusedDisableDirectives: true
+            },
+            src: [ 'test/**/*.js' ]
+        }
+    };
 };
