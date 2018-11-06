@@ -50,16 +50,16 @@ describe('uuidFromVMName', () => {
 
         });
 
-        describe('without an available VM with the given name', () => {
+        describe('with an unparseable response from execute', () => {
 
             beforeEach(() => {
-                execute.resolves('"IE11 - Win81" {c9b3b190-bd7d-41ef-a788-787f5ebc9099}\n"MSEdge - Win10" {8c04d25b-53da-46db-9f91-5f6951bd6846}');
+                execute.resolves('an unparseable response');
             });
 
             it('should throw an error', (done) => {
-                uuidFromVMName(execute, 'pancakes', null, log)
+                uuidFromVMName(execute, 'IE11 - Win81', null, log)
                     .catch((err) => {
-                        expect(err.message).to.equal("No virtual machine installed named 'pancakes'");
+                        expect(err.message).to.equal('The result returned from \'VBoxManage showvminfo "IE11 - Win81" --machinereadable\' was not parseable.');
                         expect(execute).to.have.been.calledOnce;
 
                         done();
@@ -68,63 +68,28 @@ describe('uuidFromVMName', () => {
 
         });
 
-        describe('with one available VM with the given name', () => {
+        describe('with a successful response from execute', () => {
 
             let uuid;
 
             beforeEach(() => {
                 uuid = 'c9b3b190-bd7d-41ef-a788-787f5ebc9099';
 
-                execute.resolves(`"IE11 - Win81" {${ uuid }}\n"MSEdge - Win10" {8c04d25b-53da-46db-9f91-5f6951bd6846}`);
+                execute.resolves(`name="An Existing VM"
+groups="/"
+ostype="IE11 - Win81"
+UUID="${ uuid }"
+CfgFile="/a/fake/directory/An Existing VM/An Existing VM.vbox"
+SnapFldr="/a/fake/directory/An Existing VM/Snapshots"
+LogFldr="/a/fake/directory/An Existing VM/Logs"
+hardwareuuid="${ uuid }"
+memory=2048
+...`);
             });
 
             it('should return the uuid', async () => {
                 expect(await uuidFromVMName(execute, 'IE11 - Win81', null, log)).to.equal(uuid);
                 expect(execute).to.have.been.calledOnce;
-            });
-
-        });
-
-        describe('with one available VM which partially matches the given name', () => {
-
-            let uuid;
-
-            beforeEach(() => {
-                uuid = '8c04d25b-53da-46db-9f91-5f6951bd6846';
-
-                execute.resolves(`"IE11 - Win81" {c9b3b190-bd7d-41ef-a788-787f5ebc9099}\n"MSEdge - Win10" {${ uuid }}`);
-            });
-
-            it('should throw an error', (done) => {
-                uuidFromVMName(execute, 'Edge', null, log)
-                    .catch((err) => {
-                        expect(err.message).to.equal("No virtual machine installed named 'Edge'");
-                        expect(execute).to.have.been.calledOnce;
-
-                        done();
-                    });
-            });
-
-        });
-
-        describe('with multiple available VMs which partially match the given name', () => {
-
-            let uuid;
-
-            beforeEach(() => {
-                uuid = 'c9b3b190-bd7d-41ef-a788-787f5ebc9099';
-
-                execute.resolves(`"IE11 - Win81" {${ uuid }}\n"MSEdge - Win10" {8c04d25b-53da-46db-9f91-5f6951bd6846}`);
-            });
-
-            it('should throw an error', (done) => {
-                uuidFromVMName(execute, 'Win', null, log)
-                    .catch((err) => {
-                        expect(err.message).to.equal("No virtual machine installed named 'Win'");
-                        expect(execute).to.have.been.calledOnce;
-
-                        done();
-                    });
             });
 
         });

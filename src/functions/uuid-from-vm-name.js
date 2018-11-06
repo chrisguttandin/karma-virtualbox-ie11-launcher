@@ -1,7 +1,4 @@
-function escapeRegExp (string) {
-    // $& means the whole matched string
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
+const UUID_REGEX = /^UUID="([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})"$/m;
 
 module.exports.uuidFromVMName = (execute, vmName, uuid, log) => {
     if (uuid) {
@@ -10,20 +7,13 @@ module.exports.uuidFromVMName = (execute, vmName, uuid, log) => {
 
     log.info(`Running 'VBoxManage list vms' to locate installed VM named '${ vmName }'`);
 
-    return execute('VBoxManage list vms', log)
+    return execute(`VBoxManage showvminfo "${ vmName }" --machinereadable`, log)
+        .then((result) => UUID_REGEX.exec(result))
         .then((result) => {
-            const escapedVmName = escapeRegExp(vmName);
-            const regex = new RegExp('"' + escapedVmName + '"\\s{(.+?)}', 'igm');
-            const m = regex.exec(result);
-
-            if (m && m.length === 2) {
-                const parsedUuid = m[1];
-
-                log.info(`Located VM UUID '${ parsedUuid }'`);
-
-                return parsedUuid;
+            if (result === null) {
+                throw new Error(`The result returned from 'VBoxManage showvminfo "${ vmName }" --machinereadable' was not parseable.`);
             }
 
-            throw new Error(`No virtual machine installed named '${ vmName }'`);
+            return result[1];
         });
 };
