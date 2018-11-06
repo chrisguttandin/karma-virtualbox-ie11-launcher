@@ -1,4 +1,5 @@
 const chai = require('chai');
+const sinonChai = require('sinon-chai');
 
 module.exports = {
     test: {
@@ -6,6 +7,7 @@ module.exports = {
             bail: true,
             clearRequireCache: true,
             require: [
+                () => chai.use(sinonChai),
                 () => global.expect = chai.expect
             ]
         },
