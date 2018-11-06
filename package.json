@@ -8,6 +8,12 @@
       "path": "cz-conventional-changelog"
     }
   },
+  "contributors": [
+    {
+      "email": "rkuzsma@constantcontact.com",
+      "name": "Rich Kuzsma"
+    }
+  ],
   "dependencies": {
     "spawn-args": "^0.2.0"
   },
