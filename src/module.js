@@ -1,76 +1,5 @@
-const spawn = require('child_process').spawn;
-const spawnargs = require('spawn-args');
-
-function execute (command, log) {
-    const chunks = [];
-    const tokens = command.split(/\s/);
-    const shell = spawn(tokens.shift(), spawnargs(tokens.join(' '), { removequotes: 'always' }));
-
-    shell.stderr.on('readable', () => {
-        const chunk = shell.stderr.read();
-
-        if (chunk !== null) {
-            log.warn(chunk.toString());
-        }
-    });
-
-    shell.stdout.on('readable', () => {
-        const chunk = shell.stdout.read();
-
-        if (chunk !== null) {
-            chunks.push(chunk.toString());
-        }
-    });
-
-    return new Promise((resolve, reject) => {
-        shell.on('error', (err) => {
-            reject(err);
-        });
-
-        shell.on('exit', (code) => {
-            if (code === 0) {
-                resolve(chunks.join(''));
-            } else {
-                reject(code);
-            }
-        });
-    });
-};
-
-function escapeRegExp (string) {
-    // $& means the whole matched string
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-function uuidFromVMName (vmName, uuid, log) {
-    return new Promise((resolve, reject) => {
-        if (uuid) {
-            return resolve(uuid);
-        }
-
-        log.info(`Running 'VBoxManage list vms' to locate installed VM named '${ vmName }'`);
-        execute('VBoxManage list vms', log)
-            .then((result) => {
-                const escapedVmName = escapeRegExp(vmName);
-                // eslint-disable-next-line no-useless-escape
-                const regex = new RegExp(escapedVmName + '.*\{(.+?)\}', 'igm');
-                const m = regex.exec(result);
-
-                if (m && m.length === 2) {
-                    const parsedUuid = m[1];
-
-                    log.info(`Located VM UUID '${ parsedUuid }'`);
-
-                    return resolve(parsedUuid);
-                }
-
-                return reject(new Error(`No virtual machine installed named '${ vmName }'`));
-            })
-            .catch((err) => {
-                return reject(err);
-            });
-    });
-}
+const { execute } = require('./functions/execute');
+const { uuidFromVMName } = require('./functions/uuid-from-vm-name');
 
 function VirtualBoxIE11Browser (args, baseBrowserDecorator, logger) {
     baseBrowserDecorator(this);
@@ -91,7 +20,7 @@ function VirtualBoxIE11Browser (args, baseBrowserDecorator, logger) {
     this
         .on('kill', (done) => {
             if (kill) {
-                uuidFromVMName(args.vmName, args.uuid, log)
+                uuidFromVMName(execute, args.vmName, args.uuid, log)
                     .then((uuid) => {
                         return execute(`VBoxManage controlvm {${ uuid }} acpipowerbutton`, log)
                             .then(() => done())
@@ -109,7 +38,7 @@ function VirtualBoxIE11Browser (args, baseBrowserDecorator, logger) {
             done();
         })
         .on('start', (url) => {
-            uuidFromVMName(args.vmName, args.uuid, log)
+            uuidFromVMName(execute, args.vmName, args.uuid, log)
                 .then((uuid) => {
                     return execute('VBoxManage list runningvms', log)
                         .then((result) => {
