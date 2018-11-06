@@ -4,31 +4,27 @@ function escapeRegExp (string) {
 }
 
 module.exports.uuidFromVMName = (execute, vmName, uuid, log) => {
-    return new Promise((resolve, reject) => {
-        if (uuid) {
-            return resolve(uuid);
-        }
+    if (uuid) {
+        return Promise.resolve(uuid);
+    }
 
-        log.info(`Running 'VBoxManage list vms' to locate installed VM named '${ vmName }'`);
-        execute('VBoxManage list vms', log)
-            .then((result) => {
-                const escapedVmName = escapeRegExp(vmName);
-                // eslint-disable-next-line no-useless-escape
-                const regex = new RegExp(escapedVmName + '.*\{(.+?)\}', 'igm');
-                const m = regex.exec(result);
+    log.info(`Running 'VBoxManage list vms' to locate installed VM named '${ vmName }'`);
 
-                if (m && m.length === 2) {
-                    const parsedUuid = m[1];
+    return execute('VBoxManage list vms', log)
+        .then((result) => {
+            const escapedVmName = escapeRegExp(vmName);
+            // eslint-disable-next-line no-useless-escape
+            const regex = new RegExp(escapedVmName + '.*\{(.+?)\}', 'igm');
+            const m = regex.exec(result);
 
-                    log.info(`Located VM UUID '${ parsedUuid }'`);
+            if (m && m.length === 2) {
+                const parsedUuid = m[1];
 
-                    return resolve(parsedUuid);
-                }
+                log.info(`Located VM UUID '${ parsedUuid }'`);
 
-                return reject(new Error(`No virtual machine installed named '${ vmName }'`));
-            })
-            .catch((err) => {
-                return reject(err);
-            });
-    });
+                return parsedUuid;
+            }
+
+            throw new Error(`No virtual machine installed named '${ vmName }'`);
+        });
 };
