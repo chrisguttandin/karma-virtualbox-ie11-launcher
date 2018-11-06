@@ -95,9 +95,14 @@ describe('uuidFromVMName', () => {
                 execute.resolves(`"IE11 - Win81" {c9b3b190-bd7d-41ef-a788-787f5ebc9099}\n"MSEdge - Win10" {${ uuid }}`);
             });
 
-            it('should return the uuid', async () => {
-                expect(await uuidFromVMName(execute, 'Edge', null, log)).to.equal(uuid);
-                expect(execute).to.have.been.calledOnce;
+            it('should throw an error', (done) => {
+                uuidFromVMName(execute, 'Edge', null, log)
+                    .catch((err) => {
+                        expect(err.message).to.equal("No virtual machine installed named 'Edge'");
+                        expect(execute).to.have.been.calledOnce;
+
+                        done();
+                    });
             });
 
         });
@@ -112,9 +117,14 @@ describe('uuidFromVMName', () => {
                 execute.resolves(`"IE11 - Win81" {${ uuid }}\n"MSEdge - Win10" {8c04d25b-53da-46db-9f91-5f6951bd6846}`);
             });
 
-            it('should return the uuid', async () => {
-                expect(await uuidFromVMName(execute, 'Win', null, log)).to.equal(uuid);
-                expect(execute).to.have.been.calledOnce;
+            it('should throw an error', (done) => {
+                uuidFromVMName(execute, 'Win', null, log)
+                    .catch((err) => {
+                        expect(err.message).to.equal("No virtual machine installed named 'Win'");
+                        expect(execute).to.have.been.calledOnce;
+
+                        done();
+                    });
             });
 
         });

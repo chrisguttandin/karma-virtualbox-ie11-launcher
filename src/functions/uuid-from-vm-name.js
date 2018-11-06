@@ -13,7 +13,7 @@ module.exports.uuidFromVMName = (execute, vmName, uuid, log) => {
     return execute('VBoxManage list vms', log)
         .then((result) => {
             const escapedVmName = escapeRegExp(vmName);
-            const regex = new RegExp(escapedVmName + '.*{(.+?)}', 'igm');
+            const regex = new RegExp('"' + escapedVmName + '"\\s{(.+?)}', 'igm');
             const m = regex.exec(result);
 
             if (m && m.length === 2) {
