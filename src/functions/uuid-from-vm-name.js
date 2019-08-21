@@ -1,4 +1,4 @@
-const UUID_REGEX = /^UUID="([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})"$/m;
+const UUID_REGEX = /^UUID="(?<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})"$/m;
 
 module.exports.uuidFromVMName = (execute, vmName, uuid, log) => {
     if (uuid) {
@@ -14,6 +14,6 @@ module.exports.uuidFromVMName = (execute, vmName, uuid, log) => {
                 throw new Error(`The result returned from 'VBoxManage showvminfo "${ vmName }" --machinereadable' was not parseable.`);
             }
 
-            return result[1];
+            return result.groups.uuid;
         });
 };
