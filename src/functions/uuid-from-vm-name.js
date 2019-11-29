@@ -1,4 +1,4 @@
-const UUID_REGEX = /^UUID="(?<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})"$/m;
+const UUID_REGEX = /^UUID="(?<uuid>[\da-f]{8}(?:-[\da-f]{4}){3}-[\da-f]{12})"$/m;
 
 module.exports.uuidFromVMName = (execute, vmName, uuid, log) => {
     if (uuid) {
