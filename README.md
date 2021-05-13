@@ -2,12 +2,10 @@
 
 **A Karma launcher for Internet Explorer 11 on VirtualBox.**
 
-[![tests](https://img.shields.io/travis/chrisguttandin/karma-virtualbox-ie11-launcher/master.svg?style=flat-square)](https://travis-ci.org/chrisguttandin/karma-virtualbox-ie11-launcher)
 [![dependencies](https://img.shields.io/david/chrisguttandin/karma-virtualbox-ie11-launcher.svg?style=flat-square)](https://www.npmjs.com/package/karma-virtualbox-ie11-launcher)
 [![version](https://img.shields.io/npm/v/karma-virtualbox-ie11-launcher.svg?style=flat-square)](https://www.npmjs.com/package/karma-virtualbox-ie11-launcher)
 
-The `karma-virtualbox-ie11-launcher` can be used to run karma tests on Microsoft Internet Explorer
-11. It requires one the
+The `karma-virtualbox-ie11-launcher` can be used to run karma tests on Microsoft Internet Explorer 11. It requires one the
 [official virtual machines](https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/)
 provided by Microsoft which runs on VirtualBox.
 
@@ -44,6 +42,7 @@ In case you want to know the uuids of your vms, you can run `VBoxManage list vms
 available vms.
 
 Or, you can specify the name of the VM returned by `VBoxManage list vms`, e.g.:
+
 ```js
 customLaunchers: {
     VirtualBoxIE11onWin8: {
@@ -63,7 +62,7 @@ If you explicitly specify the plugins in your config file as well, make sure to 
 plugins: [
     // ...
     'karma-virtualbox-ie11-launcher'
-]
+];
 // ...
 ```
 
