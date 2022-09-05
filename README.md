@@ -2,7 +2,6 @@
 
 **A Karma launcher for Internet Explorer 11 on VirtualBox.**
 
-[![dependencies](https://img.shields.io/david/chrisguttandin/karma-virtualbox-ie11-launcher.svg?style=flat-square)](https://github.com/chrisguttandin/karma-virtualbox-ie11-launcher/network/dependencies)
 [![version](https://img.shields.io/npm/v/karma-virtualbox-ie11-launcher.svg?style=flat-square)](https://www.npmjs.com/package/karma-virtualbox-ie11-launcher)
 
 The `karma-virtualbox-ie11-launcher` can be used to run karma tests on Microsoft Internet Explorer 11. It requires one the
