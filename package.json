@@ -19,7 +19,7 @@
     },
     "description": "A Karma launcher for Internet Explorer 11 on VirtualBox.",
     "devDependencies": {
-        "@commitlint/cli": "^17.7.2",
+        "@commitlint/cli": "^18.6.0",
         "@commitlint/config-angular": "^17.7.0",
         "chai": "^4.3.10",
         "commitizen": "^4.3.0",
