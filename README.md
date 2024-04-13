@@ -1,3 +1,7 @@
+# Status: **!!! DEPRECATED !!!**
+
+This module is deprecated and no longer maintained.
+
 # karma-virtualbox-ie11-launcher
 
 **A Karma launcher for Internet Explorer 11 on VirtualBox.**
