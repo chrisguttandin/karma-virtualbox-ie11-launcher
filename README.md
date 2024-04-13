@@ -4,7 +4,7 @@ This module is deprecated and no longer maintained.
 
 # karma-virtualbox-ie11-launcher
 
-**A Karma launcher for Internet Explorer 11 on VirtualBox.**
+**!!! DEPRECATED !!! A Karma launcher for Internet Explorer 11 on VirtualBox.**
 
 The `karma-virtualbox-ie11-launcher` can be used to run karma tests on Microsoft Internet Explorer 11. It requires one the
 [official virtual machines](https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/)
